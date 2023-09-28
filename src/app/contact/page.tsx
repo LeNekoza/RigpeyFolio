@@ -17,34 +17,36 @@ export default function Contact(){
 
 
 const Form=()=>{
-    const handleButton = ()=>{
+    const handleButton = async()=>{
         const fname = document.querySelector('input[name="fname"]') as HTMLInputElement
         const lname = document.querySelector('input[name="lname"]') as HTMLInputElement
         const email = document.querySelector('input[name="email"]') as HTMLInputElement
         const message = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement
-        fname.value = ''
-        lname.value = ''
-        email.value = ''
-        message.value = ''
-        const card = document.createElement('div')
-        card.className = 'fixed top-0 left-0 w-full h-full z-50 bg-black bg-opacity-90 flex justify-center items-center'
-        const cardContainer = document.createElement('div')
-        cardContainer.className = 'w-full h-full flex justify-center items-center'
-        const cardElement = document.createElement('div')
-        cardElement.className = 'max-h-full max-w-full p-10 bg-black rounded-lg'
-        cardElement.innerHTML = 'Sending...'
-        cardContainer.appendChild(cardElement)
-        card.appendChild(cardContainer)
-        document.body.appendChild(card)
-        setTimeout(()=>{
-            card.remove()
-        },2000)
-
+        const data = {
+            fname:fname.value,
+            lname:lname.value,
+            email:email.value,
+            message:message.value
+        }
+        const postData = await fetch('/contactform',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(data)
+        })
+        postData.json().then((res)=>{
+            if(res.status === 'success'){
+                location.href = '/successform'
+            }else{
+                location.href = '/failedform'
+            }
+        })
 
     }
     return(
         <div>
-            <form action={'/contactform'} method="POST" className="text-black font-bold grid gap-2">
+            <form className="text-black font-bold grid gap-2">
                 <input type="text" name='fname'  placeholder="First Name" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
                 <input type="text" name='lname'  placeholder="Second Name" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
                 <input type="email" name='email'  placeholder="Email" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
