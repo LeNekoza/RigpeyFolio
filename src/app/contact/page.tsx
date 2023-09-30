@@ -28,31 +28,44 @@ const Form=()=>{
             email:email.value,
             message:message.value
         }
-        const postData = await fetch('/contactform',{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify(data)
-        })
-        postData.json().then((res)=>{
-            if(res.status === 'success'){
-                location.href = '/successform'
-            }else{
-                location.href = '/failedform'
+        
+        if(fname.value.match(/^[a-zA-Z]+$/) && lname.value.match(/^[a-zA-Z]+$/) && message.value.match(/^[a-zA-Z0-9]+$/)){
+
+            if(email.value.match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)){
+                const postData = await fetch('/contactform',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify(data)
+                })
+                postData.json().then((res)=>{
+                    if(res.status === 'success'){
+                        location.href = '/successform'
+                    }else{
+                        location.href = '/failedform'
+                    }
+                })
             }
-        })
+            else{
+                email.classList.add('border-2','border-red-500')
+                alert('Please enter a valid email')
+            }
+    }
+    else{
+        alert('Please fill all the fields')
+    }
 
     }
     return(
         <div>
-            <form className="text-black font-bold grid gap-2">
-                <input type="text" name='fname' required  placeholder="First Name" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
-                <input type="text" name='lname' required  placeholder="Second Name" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
-                <input type="email" name='email' required placeholder="Email" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
+            <div className="text-black font-bold grid gap-2">
+                <input name='fname' required  placeholder="First Name" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
+                <input name='lname' required  placeholder="Second Name" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
+                <input name='email' required placeholder="Email" maxLength={30} className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
                 <textarea name="message"  id="message" required cols={30} rows={10} placeholder="Message" className=" w-[25em] focus:outline-none p-2 placeholder:italic placeholder:text-center rounded-lg"/>
-                <button type="submit" onClick={handleButton} className="bg-red-500 hover:bg-red-400 ease-linear duration-150 text-black p-2 rounded-full">Submit</button>
-            </form>
+                <button onClick={handleButton} className="bg-red-500 hover:bg-red-400 ease-linear duration-150 text-black p-2 rounded-full">Submit</button>
+            </div>
         </div>
     )
 }

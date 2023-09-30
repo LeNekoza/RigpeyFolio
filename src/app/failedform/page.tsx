@@ -6,7 +6,9 @@ export default function Formvallid() {
   <div>
     <Nav />
     <div className="flex justify-center mt-20">
+      <div className="select-none text-[5em] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">
       Failed to sent
+      </div>
       </div>
     <Footer />
   </div>
