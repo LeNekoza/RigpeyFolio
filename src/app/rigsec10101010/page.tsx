@@ -5,6 +5,7 @@ import supabase from "../utils/supabase";
 import { useState } from "react";
 export default function RigSec(){
     type Msg = {
+        id: string,
         fname: string,
         lname: string,
         email: string,
@@ -19,6 +20,14 @@ export default function RigSec(){
         setMsg(data||[])
     }
     fetchMsg()
+
+    const handleDelete = async (id: string) => {
+        const { error } = await supabase
+  .from('rigform')
+  .delete()
+  .eq('id', id)
+    if(error) return console.log(error)
+    }
 
     return(
         <div>
@@ -36,6 +45,9 @@ export default function RigSec(){
                                     <span className="text-lg">{`Email: ${msg.email}`}</span>
                                     <span className="text-lg">{`Message: ${msg.message}`}</span>
                                 </div>
+                                <button className="bg-red-500 px-5 font-bold" onClick={()=>{handleDelete(msg.id)}}>
+                                    Delete
+                                </button>
                                 <div className="w-full h-[2px] bg-gradient-to-r from-red-500 to-yellow-500 mb-20"></div>
                             </li>
                         ))
